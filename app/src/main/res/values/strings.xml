@@ -7,6 +7,9 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Exit</string>
     <string name="menu_home">STV</string>
+    <string name="vibration_home">Vibration</string>
+    <string name="info">Information</string>
+    <string name="compass">Compass</string>
     <string name="home">Contact us</string>
 
     <string name="long_string">

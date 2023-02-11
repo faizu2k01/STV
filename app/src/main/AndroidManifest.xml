@@ -28,24 +28,6 @@
             android:name=".Privacy_policy_Activity"
             android:exported="false" />
         <activity
-            android:name=".Pdf5_Activity"
-            android:exported="false" />
-        <activity
-            android:name=".Pdf4_Activity"
-            android:exported="false" />
-        <activity
-            android:name=".Pdf3_Activity"
-            android:exported="false" />
-        <activity
-            android:name=".Pdf2_Activity"
-            android:exported="false" />
-        <activity
-            android:name=".Pdf1_Activity"
-            android:exported="false" />
-        <activity
-            android:name=".Slider_Info_Activity"
-            android:exported="false" />
-        <activity
             android:name=".Compass_Activity"
             android:exported="false" />
         <activity

@@ -60,91 +60,7 @@ public class MainActivity extends AppCompatActivity {
         else
             connected = false;
 
-           MobileAds.initialize(this, new OnInitializationCompleteListener() {
-               @Override
-               public void onInitializationComplete(InitializationStatus initializationStatus) {
-               }
-           });
 
-           AdRequest adRequest1 = new AdRequest.Builder().build();
-           AdRequest adRequest2 = new AdRequest.Builder().build();
-           AdRequest adRequest3 = new AdRequest.Builder().build();
-
-
-           InterstitialAd.load(this, "ca-app-pub-4384062510479836/3211069816", adRequest1,
-                   new InterstitialAdLoadCallback() {
-                       @Override
-                       public void onAdLoaded(InterstitialAd interstitialAd) {
-                           // The mInterstitialAd reference will be null until
-                           // an ad is loaded.
-                           mInterstitialAd1 = interstitialAd;
-
-                       }
-
-                       @Override
-                       public void onAdFailedToLoad(LoadAdError loadAdError) {
-                           // Handle the error
-                           super.onAdFailedToLoad(loadAdError);
-                           mInterstitialAd1 = null;
-
-                       }
-                   });
-
-        InterstitialAd.load(this, "ca-app-pub-4384062510479836/8834931583", adRequest2,
-                new InterstitialAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(InterstitialAd interstitialAd) {
-                        // The mInterstitialAd reference will be null until
-                        // an ad is loaded.
-                        mInterstitialAd2 = interstitialAd;
-
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(LoadAdError loadAdError) {
-                        // Handle the error
-                        super.onAdFailedToLoad(loadAdError);
-                        mInterstitialAd2 = null;
-
-                    }
-                });
-        InterstitialAd.load(this, "ca-app-pub-4384062510479836/4320971501", adRequest3,
-                new InterstitialAdLoadCallback() {
-                    @Override
-                    public void onAdLoaded(InterstitialAd interstitialAd) {
-                        // The mInterstitialAd reference will be null until
-                        // an ad is loaded.
-                        mInterstitialAd3 = interstitialAd;
-
-                    }
-
-                    @Override
-                    public void onAdFailedToLoad(LoadAdError loadAdError) {
-                        // Handle the error
-                        super.onAdFailedToLoad(loadAdError);
-                        mInterstitialAd3 = null;
-
-                    }
-                });
-
-        binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (connected) {
-                    Intent intent = new Intent(MainActivity.this, Slider_Info_Activity.class);
-                    startActivity(intent);
-
-                    if (mInterstitialAd1 != null) {
-                        mInterstitialAd1.show(MainActivity.this);
-                    } else {
-                        Log.d("TAG", "The interstitial ad wasn't ready yet.");
-                    }
-                } else {
-                    Snackbar.make(view, "Internet connection is not On please on it.", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            }
-        });
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
         // Passing each menu ID as a set of Ids because each
@@ -208,11 +124,7 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this,Use_STV_Activity.class);
         startActivity(intent);
-        if (mInterstitialAd2 != null) {
-            mInterstitialAd2.show(MainActivity.this);
-        } else {
-            Log.d("TAG", "The interstitial ad wasn't ready yet.");
-        }
+
 
 
     }
@@ -220,11 +132,7 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this,Compass_Activity.class);
         startActivity(intent);
-        if (mInterstitialAd3 != null) {
-            mInterstitialAd3.show(MainActivity.this);
-        } else {
-            Log.d("TAG", "The interstitial ad wasn't ready yet.");
-        }
+
     }
     public void onExitMethod2(MenuItem menuItem){
         Intent intent = new Intent(MainActivity.this,Privacy_policy_Activity.class);

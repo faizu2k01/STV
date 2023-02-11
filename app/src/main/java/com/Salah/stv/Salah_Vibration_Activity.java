@@ -19,11 +19,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.Salah.stv.R;
+import com.Salah.stv.databinding.ActivityMainBinding;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -54,14 +56,16 @@ public class Salah_Vibration_Activity extends AppCompatActivity {
     private long fajarTimeStart,fajarTimeEnd,zuharTimeStart,zuharTimeEnd,asarTimeStart,asarTimeEnd,magribTimeStart,magribTimeEnd,ishaTimeStart,ishaTimeEnd,inExactTimeStart,inExactTimeEnd;
     public AlarmManager alarmManager1,alarmManager2,alarmManager3,alarmManager4,alarmManager5,alarmManager6,alarmManager7,alarmManager8,alarmManager9,alarmManager10,alarmManagerInExact1,alarmManagerInExact2;
     public PendingIntent pendingIntent1,pendingIntent2,pendingIntent3,pendingIntent4,pendingIntent5,pendingIntent6,pendingIntent7,pendingIntent8,pendingIntent9,pendingIntent10,pendingIntentInExact1,pendingIntentInExact2;
-    public Intent intent1,intent2,intent3,intent4,intent5,intent6,intent7,intent8,intent9,intent10,intentInExact1,intentInExact2;
+    public Intent intent1,intent2,intent3,intent4,intent5,intent6,intent7,intent8,intent9,intent10;
     public SharedPreferences sharedPreferences;
-    private AdView mAdView1,mAdView2;
     private boolean connected;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private TextView fajrText,dhurText,asarText,magribText,ishaText,address,city,country;
-    private final static int REQUEST_CODE = 100;
+     private final static int REQUEST_CODE = 100;
+     private  boolean responseCame = false;
     private String localAdd;
+
+
 
 
     @Override
@@ -84,94 +88,13 @@ public class Salah_Vibration_Activity extends AppCompatActivity {
             asarText = findViewById(R.id.Asar);
             magribText = findViewById(R.id.Magrib);
             ishaText = findViewById(R.id.Isha);
+
+//            resetButton = (Button)findViewById(R.id.resetBut);
+
             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-            MobileAds.initialize(this, new OnInitializationCompleteListener() {
-                @Override
-                public void onInitializationComplete(InitializationStatus initializationStatus) {
-                }
-            });
-        mAdView1 = findViewById(R.id.adView1);
-        AdRequest adRequest1 = new AdRequest.Builder().build();
-        mAdView1.loadAd(adRequest1);
 
-        mAdView2 = findViewById(R.id.adView2);
-        AdRequest adRequest2 = new AdRequest.Builder().build();
-        mAdView2.loadAd(adRequest2);
-
-        mAdView1.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-                super.onAdLoaded();
-
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-                super.onAdFailedToLoad(adError);
-                mAdView1.loadAd(adRequest1);
-
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-                super.onAdOpened();
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-                super.onAdClicked();
-
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
-
-        mAdView2.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                // Code to be executed when an ad finishes loading.
-                super.onAdLoaded();
-
-            }
-
-            @Override
-            public void onAdFailedToLoad(LoadAdError adError) {
-                // Code to be executed when an ad request fails.
-                super.onAdFailedToLoad(adError);
-                mAdView2.loadAd(adRequest2);
-            }
-
-            @Override
-            public void onAdOpened() {
-                // Code to be executed when an ad opens an overlay that
-                // covers the screen.
-                super.onAdOpened();
-            }
-
-            @Override
-            public void onAdClicked() {
-                // Code to be executed when the user clicks on an ad.
-                super.onAdClicked();
-            }
-
-            @Override
-            public void onAdClosed() {
-                // Code to be executed when the user is about to return
-                // to the app after tapping on an ad.
-            }
-        });
-
-       getLocation();
+            getLocation();
     }
 
 
@@ -182,18 +105,7 @@ public class Salah_Vibration_Activity extends AppCompatActivity {
         magrib = (Switch) findViewById(R.id.magribSwitch);
         isha = (Switch) findViewById(R.id.ishaSwitch);
 
-        inExactTimeStart = calenderTiming(21, 37);
-        inExactTimeEnd = calenderTiming(23,0);
-        fajarTimeStart = calenderTiming(5, 0);
-        fajarTimeEnd = calenderTiming(7,0);
-        zuharTimeStart = calenderTiming(12,40);
-        zuharTimeEnd = calenderTiming(14,30);
-        asarTimeStart = calenderTiming(15,50);
-        asarTimeEnd = calenderTiming(17,50);
-        magribTimeStart= calenderTiming(18,0);
-        magribTimeEnd = calenderTiming(18,30);
-        ishaTimeStart = calenderTiming(19,30);
-        ishaTimeEnd = calenderTiming(21,0);
+       
 
 
         sharedPreferences = getSharedPreferences("Value", MODE_PRIVATE);
@@ -207,13 +119,13 @@ public class Salah_Vibration_Activity extends AppCompatActivity {
         fajar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(responseCame){
                 if (fajar.isChecked()) {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean("YESORNO1", true);
                     editor.apply();
                     fajar.setChecked(true);
                     fajarsharePrefrencevalue(true);
-
 
 
                 } else {
@@ -225,97 +137,132 @@ public class Salah_Vibration_Activity extends AppCompatActivity {
                 }
 
             }
+        }
         });
 
-//        zuhar.setOnClickListener(new View.OnClickListener() {
+        zuhar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(responseCame){
+                if (zuhar.isChecked()) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("YESORNO2", true);
+                    editor.apply();
+                    zuhar.setChecked(true);
+                    zuharsharePrefrencevalue(true);
+
+
+
+                } else {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean("YESORNO2", false);
+                    editor.apply();
+                    zuhar.setChecked(false);
+                    zuharsharePrefrencevalue(false);
+                }
+
+            }
+            }
+        });
+
+        asar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(responseCame) {
+                    if (asar.isChecked()) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("YESORNO3", true);
+                        editor.apply();
+                        asar.setChecked(true);
+                        asarsharePrefrencevalue(true);
+
+
+                    } else {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("YESORNO3", false);
+                        editor.apply();
+                        asar.setChecked(false);
+                        asarsharePrefrencevalue(false);
+                    }
+                }
+
+            }
+        });
+
+        magrib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(responseCame) {
+                    if (magrib.isChecked()) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("YESORNO4", true);
+                        editor.apply();
+                        magrib.setChecked(true);
+                        magribsharePrefrencevalue(true);
+
+
+                    } else {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("YESORNO4", false);
+                        editor.apply();
+                        magrib.setChecked(false);
+                        magribsharePrefrencevalue(false);
+                    }
+                }
+
+            }
+        });
+
+        isha.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(responseCame) {
+                    if (isha.isChecked()) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("YESORNO5", true);
+                        editor.apply();
+                        isha.setChecked(true);
+                        ishasharePrefrencevalue(true);
+
+
+                    } else {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("YESORNO5", false);
+                        editor.apply();
+                        isha.setChecked(false);
+                        ishasharePrefrencevalue(false);
+                    }
+                }
+
+            }
+        });
+
+//        resetButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
-//            public void onClick(View view) {
-//                if (zuhar.isChecked()) {
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putBoolean("YESORNO2", true);
-//                    editor.apply();
-//                    zuhar.setChecked(true);
-//                    zuharsharePrefrencevalue(true);
+//            public void onClick(View v) {
+//                if(responseCame){
+//                    if(sharedPreferences.getBoolean("YESORNO1",false)){
+//                        fajarsharePrefrencevalue(false);
+//                        fajarsharePrefrencevalue(true);
+//                    }
+//                    if(sharedPreferences.getBoolean("YESORNO2",false)){
+//                        zuharsharePrefrencevalue(false);
+//                        zuharsharePrefrencevalue(true);
+//                    }
+//                    if(sharedPreferences.getBoolean("YESORNO3",false)){
+//                        asarsharePrefrencevalue(false);
+//                        asarsharePrefrencevalue(true);
+//                    }
+//                    if(sharedPreferences.getBoolean("YESORNO4",false)){
+//                        magribsharePrefrencevalue(false);
+//                        magribsharePrefrencevalue(true);
+//                    }
+//                    if(sharedPreferences.getBoolean("YESORNO5",false)){
+//                        ishasharePrefrencevalue(false);
+//                        ishasharePrefrencevalue(true);
+//                    }
 //
-//
-//
-//                } else {
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putBoolean("YESORNO2", false);
-//                    editor.apply();
-//                    zuhar.setChecked(false);
-//                    zuharsharePrefrencevalue(false);
 //                }
-//
-//            }
-//        });
-//
-//        asar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (asar.isChecked()) {
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putBoolean("YESORNO3", true);
-//                    editor.apply();
-//                    asar.setChecked(true);
-//                    asarsharePrefrencevalue(true);
-//
-//
-//
-//                } else {
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putBoolean("YESORNO3", false);
-//                    editor.apply();
-//                    asar.setChecked(false);
-//                    asarsharePrefrencevalue(false);
-//                }
-//
-//            }
-//        });
-//
-//        magrib.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (magrib.isChecked()) {
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putBoolean("YESORNO4", true);
-//                    editor.apply();
-//                    magrib.setChecked(true);
-//                    magribsharePrefrencevalue(true);
-//
-//
-//
-//                } else {
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putBoolean("YESORNO4", false);
-//                    editor.apply();
-//                    magrib.setChecked(false);
-//                    magribsharePrefrencevalue(false);
-//                }
-//
-//            }
-//        });
-//
-//        isha.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (isha.isChecked()) {
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putBoolean("YESORNO5", true);
-//                    editor.apply();
-//                    isha.setChecked(true);
-//                    ishasharePrefrencevalue(true);
-//
-//
-//
-//                } else {
-//                    SharedPreferences.Editor editor = sharedPreferences.edit();
-//                    editor.putBoolean("YESORNO5", false);
-//                    editor.apply();
-//                    isha.setChecked(false);
-//                    ishasharePrefrencevalue(false);
-//                }
-//
 //            }
 //        });
 
@@ -324,20 +271,11 @@ public class Salah_Vibration_Activity extends AppCompatActivity {
     //Slot first start for fajar
     private  void fajarsharePrefrencevalue(boolean commer)
     {
-//        fajarRunningMethod(commer,fajarTimeStart, fajarTimeEnd);
-        inExactRunningMethod(commer,inExactTimeStart,inExactTimeEnd);
+       fajarRunningMethod(commer,fajarTimeStart, fajarTimeEnd);
+
 
     }
-    protected void inExactRunningMethod(boolean checker, long time1,long time2) {
-        if (checker) {
 
-            inExactsetAlarmVibrateCreate(time1);
-
-        } else {
-
-            inExactsetAlarmVibrateDestroy();
-        }
-    }
 
     protected void fajarRunningMethod(boolean checker, long time1,long time2) {
         if (checker) {
@@ -608,45 +546,13 @@ public class Salah_Vibration_Activity extends AppCompatActivity {
     }
 
 
-    //Slot five finsh for isha
-
-    //Slot Six for inExactAlarm
-//    private void inExactsetAlarmNormalCreate(long time2) {
-//        alarmManagerInExact1 = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-//        intentInExact1 = new Intent(this, DailyAlarmScheduling.class);
-//        pendingIntentInExact1 = PendingIntent.getBroadcast(this, 0, intentInExact1, PendingIntent.FLAG_CANCEL_CURRENT);
-//        alarmManagerInExact1.setInexactRepeating(AlarmManager.RTC_WAKEUP, time2, AlarmManager.INTERVAL_DAY, pendingIntentInExact1);
-//
-//    }
-//    private void inExactsetAlarmNormalDestroy()
-//    {
-//        alarmManagerInExact1 = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-//        intentInExact1 = new Intent(this, DailyAlarmCancelScheduling.class);
-//        pendingIntentInExact1 = PendingIntent.getBroadcast(this, 0, intentInExact1, PendingIntent.FLAG_CANCEL_CURRENT);
-//        alarmManagerInExact1.cancel(pendingIntentInExact1);
-//        pendingIntentInExact1.cancel();
-//    }
-//
 
 
-    private void inExactsetAlarmVibrateCreate(long time1) {
-        alarmManagerInExact2 = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        intentInExact2 = new Intent(this, DailyAlarmScheduling.class);
-        pendingIntentInExact2= PendingIntent.getBroadcast(this, 1, intentInExact2, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManagerInExact2.setInexactRepeating(AlarmManager.RTC_WAKEUP, time1, AlarmManager.INTERVAL_DAY, pendingIntent1);
-        Toast.makeText(this,"fajar Automation start",Toast.LENGTH_SHORT).show();
-    }
 
 
-    private void inExactsetAlarmVibrateDestroy()
-    {
-        alarmManagerInExact2 = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        intentInExact2 = new Intent(this, DailyAlarmCancelScheduling.class);
-        pendingIntentInExact2 = PendingIntent.getBroadcast(this, 1, intentInExact2, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManagerInExact2.cancel(pendingIntentInExact2);
-        pendingIntentInExact2.cancel();
-        Toast.makeText(this,"fajar Automation cancel",Toast.LENGTH_SHORT).show();
-    }
+
+
+
     //Slot Six for inExactAlarm finish
     protected long calenderTiming(int hourOfDat, int n) {
         Calendar calendar = Calendar.getInstance();
@@ -670,13 +576,48 @@ public class Salah_Vibration_Activity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
 
                         try {
+                            responseCame = true;
                             JSONObject  js =  response.getJSONObject("data");
                             JSONObject  js2 =  js.getJSONObject("timings");
-                            fajrText.setText((CharSequence) js2.get("Fajr"));
-                            dhurText.setText((CharSequence) js2.get("Dhuhr"));
-                            asarText.setText((CharSequence) js2.get("Asr"));
-                            magribText.setText((CharSequence) js2.get("Maghrib"));
-                            ishaText.setText((CharSequence) js2.get("Isha"));
+
+                            String fajrTime = (String)js2.get("Fajr");
+                            if(fajrTime != null) {
+                                fajrText.setText(GetFormattedTime(fajrTime));
+                                int[] fajar = GetTime(fajrTime);
+                                fajarTimeStart = calenderTiming(fajar[0], fajar[1]);
+                                fajarTimeEnd = calenderTiming(fajar[0] + 1, fajar[1]);
+                            }
+                            String dhuhrTime = (String)js2.get("Dhuhr");
+                            if(dhuhrTime != null) {
+                                dhurText.setText(GetFormattedTime(dhuhrTime));
+                                int[] zuhr = GetTime(dhuhrTime);
+                                zuharTimeStart = calenderTiming(zuhr[0],zuhr[1]);
+                                zuharTimeEnd = calenderTiming(zuhr[0]+2,zuhr[1]);
+                            }
+
+                            String asarTime = (String) js2.get("Asr");
+                            if(asarTime!=null) {
+                                asarText.setText(GetFormattedTime(asarTime));
+                                int[] asr = GetTime(asarTime);
+                                asarTimeStart = calenderTiming(asr[0],asr[1]);
+                                asarTimeEnd = calenderTiming(asr[0]+1,asr[1]+30);
+                            }
+
+                            String magribTime = (String)js2.get("Maghrib");
+                            if(magribTime!=null) {
+                                magribText.setText(GetFormattedTime(magribTime));
+                                int[] maghrib = GetTime(magribTime);
+                                magribTimeStart = calenderTiming(maghrib[0],maghrib[1]);
+                                magribTimeEnd = calenderTiming(maghrib[0]+1,maghrib[1]);
+                            }
+
+                            String ishaTime = (String) js2.get("Isha");
+                            if(ishaTime!= null) {
+                                ishaText.setText(GetFormattedTime(ishaTime));
+                                int[] isha = GetTime(ishaTime);
+                                ishaTimeStart = calenderTiming(isha[0],isha[1]);
+                                ishaTimeEnd = calenderTiming(isha[0]+2,isha[1]);
+                            }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -766,22 +707,52 @@ public class Salah_Vibration_Activity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void createAlarm(){
+    private String GetFormattedTime(String time){
+        String[] timeArr = time.split(":");
 
-        //fajarsharePrefrencevalue(true);
-        zuharsharePrefrencevalue(true);
-        asarsharePrefrencevalue(true);
-        magribsharePrefrencevalue(true);
-        ishasharePrefrencevalue(true);
+        if(timeArr[0].charAt(0)=='0'){
+            timeArr[0] = String.valueOf(timeArr[0].charAt(1));
 
+        }
+
+        if(Integer.parseInt(timeArr[0]) == 12){
+            time = time + " PM ";
+            return time;
+        }
+        else if(Integer.parseInt(timeArr[0]) > 12){
+            String exactTime1 = "0"+String.valueOf(+Integer.parseInt(timeArr[0]) - 12)+":"+timeArr[1]+" PM";
+            return exactTime1;
+        }
+        else if(Integer.parseInt(timeArr[0]) < 12){
+            String exactTime2 = timeArr[0]+":"+timeArr[1]+" AM";
+            return exactTime2;
+        }
+
+        return new String();
 
     }
 
-    public void cancelAlarm(){
-        //fajarsharePrefrencevalue(false);
-        zuharsharePrefrencevalue(false);
-        asarsharePrefrencevalue(false);
-        magribsharePrefrencevalue(false);
-        ishasharePrefrencevalue(false);
+
+    private int[] GetTime(String time){
+        String[] timeArr = time.split(":");
+        int[] exactTime = new int[2];
+
+        if(timeArr[0].charAt(0)=='0'){
+            timeArr[0] = String.valueOf(timeArr[0].charAt(1));
+
+        }
+
+        if(timeArr[1].charAt(0)=='0'){
+            timeArr[1] = String.valueOf(timeArr[1].charAt(1));
+        }
+
+
+            exactTime[0] = Integer.parseInt(timeArr[0]);
+            exactTime[1] = Integer.parseInt(timeArr[1]);
+
+            return exactTime;
+
     }
+
+
 }
