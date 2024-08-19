@@ -347,7 +347,7 @@ public class Salah_Vibration_Activity extends AppCompatActivity {
         alarmManager4 = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         intent4 = new Intent(this, MySchedulerNormal.class);
         pendingIntent4 = PendingIntent.getBroadcast(this, 2, intent4, PendingIntent.FLAG_CANCEL_CURRENT);
-        alarmManager4.setWindow(AlarmManager.RTC_WAKEUP, time2, AlarmManager.INTERVAL_DAY, pendingIntent4);
+        alarmManager4.setRepeating(AlarmManager.RTC_WAKEUP, time2, AlarmManager.INTERVAL_DAY, pendingIntent4);
 
     }
     private void zuharcancelAlarmNormal()
